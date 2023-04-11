@@ -1,3 +1,24 @@
+# Revision Content
+
+## Issue Reproduction
+
+During the process of trying to persist cookies in the client for testing, I found that when calling the save() method of the persistent-cookiejar jar from [https://github.com/juju/persistent-cookiejar], some cookie parameters were not persisted. After debugging, I discovered that this was because some cookies had a persistent value of false, but their expiration time was set to 9999 years. If these key parameters are missing, it is not possible to simulate a successful login. Therefore, it is necessary to retain these parameters, but the original persistent-cookiejar filters out cookies with a persistent value of false, which prevents them from being saved, resulting in cookies lacking valid information for login.
+
+![image](https://user-images.githubusercontent.com/20622517/231108044-27c3b134-d0b2-4246-830c-fd5ed04e484e.png)
+
+![B3A45DBF622700017521360DD112585E](https://user-images.githubusercontent.com/20622517/231108561-a529f06f-4b82-4914-b84a-9d4b28076991.jpg)
+
+![image](https://user-images.githubusercontent.com/20622517/231108654-d08487a0-4001-47cc-bfe8-998a470ba79b.png)
+
+## Key Code
+
+Below is the original code, which can be seen filtering out non-persistent parameters.
+![2AAB7AB0F517716B2AB6898A90EE8141](https://user-images.githubusercontent.com/20622517/231108696-c80c4d6f-07b4-49a9-b308-fbe05a53015a.jpg)
+
+Due to time constraints, I only removed the if condition.
+![183F59DDAC3787DC21F5B28AD8CE01D7](https://user-images.githubusercontent.com/20622517/231108724-59b96dbf-c546-477c-9b8a-b247a6363d1f.jpg)
+
+
 # cookiejar
 --
     import "github.com/juju/persistent-cookiejar"
